@@ -1,2 +1,2 @@
 # mmp_activity
-Repository für den Hackathon
+Repository für den WebTech-Hackathon 2020
