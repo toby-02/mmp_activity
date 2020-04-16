@@ -17,4 +17,5 @@ h1 {
   margin-right: 25vw;
   margin-left: 25vw;
   background-color: WhiteSmoke;
+  visibility: hidden;
 }

@@ -167,7 +167,6 @@ if(isset($_POST['go'])){
         <div class="form-check form-check-inline">
           <input name="kategorien[]" class="form-check-input" type="checkbox" id="<?php echo $kategorie['kategorie_name']; ?>"
           value = "<?php echo $kategorie['kategorie_name']; ?> " checked='checked'>
-
           <label class="form-check-label" for="<?php echo $kategorie['kategorie_name']; ?>"><?php echo $kategorie['kategorie_name']; ?></label>
         </div>
 

@@ -18,8 +18,6 @@ foreach($kategorien as $kategorie){
       }
   }
 shuffle($alle_begriffe_beschreibungen_kategorien);
-// $angezeigt = $alle_begriffe_beschreibungen_kategorien['0'];
-// print_r($angezeigt);
 ?>
 
 <!-- VIEW -->
@@ -32,14 +30,14 @@ shuffle($alle_begriffe_beschreibungen_kategorien);
   <!-- Bootstrap & CSS Verlinkung -->
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
   <link href="../styles.css" rel="stylesheet" type="text/css">
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+
 </head>
 <body>
 
   <div class="box_mitte">
     <div class="mitte">
       <!-- Badge mit Spielmodus -->
-      <h3><span class="badge badge-success badge-lg">Pantomime/Erkläre/Zeichne:</span></h3></br>
+      <h3><span id="modus" class="badge badge-success badge-lg"></span></h3></br>
 
       <!-- Angezeigter Begriff -->
       <h1 id= "angezeigter_begriff" class= angezeigter_begriff></h1></br>
@@ -51,13 +49,13 @@ shuffle($alle_begriffe_beschreibungen_kategorien);
       <h4>0:30s</h4></br>
 
       <!-- Button Erklärung anzeigen -->
-      <button type="button" class="btn btn-primary">Erklärung anzeigen</button>
+      <button type="button" id="show" class="btn btn-primary">Erklärung anzeigen</button>
 
       <!-- Button Nächster Begriff -->
       <button type="button" id="next" class="btn btn-secondary">Nächster Begriff</button></br></br>
 
       <!-- Beschreibung -->
-      <p id="angezeigte_beschreibung"> </p>
+      <p id="angezeigte_beschreibung" visible="false"> </p>
 
 
       <!-- Button Spiel beenden -->
@@ -72,8 +70,12 @@ shuffle($alle_begriffe_beschreibungen_kategorien);
 <?php include_once('../templates/footer.php'); ?>
 
 <script>
+    //Array mit dem Spielmodus aus PHP in JS nehmen und ersten Wert ausgeben
+    var modus =<?php echo json_encode($modus );?>;
+    var art = modus['0'];
+    document.getElementById("modus").innerHTML = art;
 
-    // Array mit allen Daten aus PHP in JS nehmen und ersten Wert in angezeigt laden
+    // Array mit allen Begriffen etc. aus PHP in JS nehmen und ersten Wert in angezeigt laden
     var alles =<?php echo json_encode($alle_begriffe_beschreibungen_kategorien );?>;
     var angezeigt = alles['0'];
 
@@ -89,21 +91,43 @@ shuffle($alle_begriffe_beschreibungen_kategorien);
     var beschreibung = angezeigt['beschreibung'];
     document.getElementById("angezeigte_beschreibung").innerHTML = beschreibung;
 
-    // Mit dem Counter den nächste Begriff im Array ansteuern, wenn auf den Button geklickt wird
+    // Mit dem Counter den nächste Begriff im Array ansteuern, wenn auf den Button nächster Begriff geklickt wird
     var counter = 0;
     document.querySelector("#next").addEventListener("click", function(){
+      //Neuer Begriff anzeigen
       counter = counter + 1;
-      var angezeigt = alles[counter];
-      var begriff= angezeigt['begriff'];
-      document.getElementById("angezeigter_begriff").innerHTML = begriff;
+      if(counter >= alles.length){
+        document.getElementById("angezeigter_begriff").innerHTML = "Du hast alle Begriffe der gewählten Kategorien durchgespielt";
+        document.getElementById("angezeigte_beschreibung").style.visibility = "hidden";
+        document.getElementById("next").style.visibility = "hidden";
+        document.getElementById("show").style.visibility = "hidden";
+        document.getElementById("modus").style.visibility = "hidden";
+        document.getElementById("angezeigte_kategorie").style.visibility = "hidden";
+      }else{
+        var angezeigt = alles[counter];
+        var begriff= angezeigt['begriff'];
+        document.getElementById("angezeigter_begriff").innerHTML = begriff;
 
-      var beschreibung = angezeigt['beschreibung'];
-      document.getElementById("angezeigte_beschreibung").innerHTML = beschreibung;
+        //Neue Beschreibung anzeigen & Beschreibung wieder verstecken
+        var beschreibung = angezeigt['beschreibung'];
+        document.getElementById("angezeigte_beschreibung").innerHTML = beschreibung;
+        document.getElementById("angezeigte_beschreibung").style.visibility = "hidden";
 
-      var kategorie= angezeigt['kategorie_name'];
-      document.getElementById("angezeigte_kategorie").innerHTML = kategorie;
+        //Neue Kategorie anzeigen
+        var kategorie= angezeigt['kategorie_name'];
+        document.getElementById("angezeigte_kategorie").innerHTML = kategorie;
 
+        //Neue zufällige Spielart auswählen
+        var mod_count = Math.floor(Math.random() * modus.length);
+        var art = modus[mod_count];
+        document.getElementById("modus").innerHTML = art;
+      }
       });
+
+    //Beschreibung anzeigen, sobald auf Button geklickt wird
+    document.querySelector("#show").addEventListener("click", function(){
+      document.getElementById("angezeigte_beschreibung").style.visibility = "visible";
+    });
 
 </script>
 </body>
