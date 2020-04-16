@@ -30,7 +30,9 @@ function selektiere_alle_kategorien(){
 
 function selektiere_begriffe_beschreibung_anhand_kategorie($kategorie){
 	$db = get_db_connection();
-	$sql = 	"SELECT * FROM begriff_kategorie WHERE kategorie_name = '$kategorie';";
+	$sql = 	"SELECT * FROM begriffe RIGHT JOIN begriff_kategorie
+	ON begriffe.begriff = begriff_kategorie.begriff
+	WHERE begriff_kategorie.kategorie_name = '$kategorie'; ";
 	$result = $db->query($sql);
 	return $result->fetchAll();
 }

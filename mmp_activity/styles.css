@@ -12,3 +12,9 @@ h1 {
 .mitte {
   text-align: center;
 }
+
+#angezeigte_beschreibung {
+  margin-right: 25vw;
+  margin-left: 25vw;
+  background-color: WhiteSmoke;
+}
