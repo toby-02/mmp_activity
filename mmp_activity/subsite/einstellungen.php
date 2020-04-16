@@ -4,6 +4,7 @@ session_start();
 require_once('../system/config.php');
 require_once('../system/data.php');
 
+// Kategorien dynamisch aus der Datenbank laden
 $kategorien= selektiere_alle_kategorien();
 
 // überprüfen, ob der Button Go geklickt wurde
@@ -12,17 +13,55 @@ if(isset($_POST['go'])){
   $msg_modus = "";
   $msg_kategorie = "";
 
-  // if(!isset($_POST['test'])){
-  //   $msg_kategorie = "Bitte wähle eine Kategorie an";
-  // }
-  $test = $_POST['test'];
-  if ($test == 1) {
-  $test = 1;
-  } else {
-  $test = 0;
-  $msg_kategorie = "Bitte wähle eine Kategorie an";
+  // Überprüfen, ob beim Spielmodus irgendwo ein Häckchen gesetzt wurde
+  // Wenn ja, dann pusht es die angewählte Spielart in das Array $modus
+  $modus=[];
+  if(isset($_POST['erklaeren'])){
+    $erklaeren_check = $_POST['erklaeren'];
+    array_push($modus, "$erklaeren_check");
+    }
+  if(isset($_POST['pantomime'])){
+    $pantomime_check = $_POST['pantomime'];
+    array_push($modus, "$pantomime_check");
+    }
+  if(isset($_POST['zeichnen'])){
+    $zeichnen_check = $_POST['zeichnen'];
+    array_push($modus, "$zeichnen_check");
   }
 
+  //Wenn nirgends ein Häckchen gesetzt wurde, dann gibt es eine Nachricht und die
+  //Schaltervariable $go_valid wird auf false gesetzt
+  if(!isset($erklaeren_check) && !isset($pantomime_check) && !isset($zeichnen_check)){
+    $msg_modus = "Bitte wähle einen Spielmodus an";
+    $go_valid = false;
+  }
+
+  // Überprüfen, ob bei den Kategorien irgendwo kein Häckchen gesetzt wurde
+  //Falls nicht, dann gibt es eine Nachricht und Schaltervariable $go_valid wird auf false gesetzt
+  if(isset($_POST['kategorien'])){
+    $kategorie_check = $_POST['kategorien'];
+  }else{
+    $msg_kategorie = "Bitte wähle eine Kategorie an";
+    $go_valid = false;
+  }
+
+
+
+  //Überprüfen, welchen Wert im Timer eingegeben wurde
+  if(isset($_POST['timer'])){
+    $t = $_POST['timer'];
+  }
+
+  //Wenn die Schaltervariable $go_valid noch true ist
+  //Werden alle Einstellungen in die Variable $einstellungen gespeichert
+  //Und anschliessend wird diese Variable in einer Session gespeichert
+  //Umleitung auf die spielen.php Seite
+  if($go_valid){
+    $einstellungen = [$t, $modus, $kategorie_check];
+    // print_r($einstellungen);
+    $_SESSION['einstellungen'] = $einstellungen;
+    header("Location: spielen.php");
+  }
 }
 ?>
 
@@ -38,10 +77,11 @@ if(isset($_POST['go'])){
   <link href="../styles.css" rel="stylesheet" type="text/css">
 </head>
 <body>
-  <!-- Navigation -->
+
 
 
   <div class="container">
+    <!-- Navigation -->
     <?php include_once('../templates/menu.php'); ?>
 
     <h1>Vor-Einstellungen</h1></br>
@@ -55,27 +95,37 @@ if(isset($_POST['go'])){
 
         <!-- Checkbox Erklären -->
         <div class="form-check">
-          <input name="erklaeren" class="form-check-input" type="checkbox" value="" id="erklaeren" checked>
-          <label class="form-check-label" for="erklaeren">
-            Erklären
-          </label>
+          <input name="erklaeren" class="form-check-input" type="checkbox" value="Erkläre:" id="erklaeren"
+          <?php if(isset($erklaeren_check)){
+            echo "checked='checked'";
+          } ?>>
+          <label class="form-check-label" for="erklaeren">Erklären</label>
         </div>
 
         <!-- Checkbox Pantomime -->
         <div class="form-check">
-          <input name="pantomime" class="form-check-input" type="checkbox" value="" id="pantomime" checked>
-          <label class="form-check-label" for="pantomime">
-            Pantomime
-          </label>
+          <input name="pantomime" class="form-check-input" type="checkbox" value="Pantomime:" id="pantomime"
+          <?php if(isset($pantomime_check)){
+            echo "checked='checked'";
+          } ?>>
+          <label class="form-check-label" for="pantomime">Pantomime</label>
         </div>
 
         <!-- Checkbox Zeichnen -->
         <div class="form-check">
-          <input name="zeichnen" class="form-check-input" type="checkbox" value="" id="zeichnen" checked>
-          <label class="form-check-label" for="zeichnen">
-            Zeichnen
-          </label>
+          <input name="zeichnen" class="form-check-input" type="checkbox" value="Zeichne:" id="zeichnen"
+          <?php if(isset($zeichnen_check)){
+            echo "checked='checked'";
+          } ?>>
+          <label class="form-check-label" for="zeichnen">Zeichnen</label>
         </div> </br>
+
+        <!-- Modus Message -->
+        <?php if(!empty($msg_modus)){ ?>
+              <div class="alert alert-info msg" role="alert">
+                <p><?php echo $msg_modus ?></p>
+              </div>
+        <?php } ?>
 
       <!-- Timer -->
       <h3>Timer</h3>
@@ -83,42 +133,46 @@ if(isset($_POST['go'])){
 
         <!-- Dropout Timer -->
         <div class="form-group">
-         <select class="form-control" id="timer">
-           <option name="30s">30s</option>
-           <option name="45s">45s</option>
-           <option name="60s">60s</option>
-           <option name="no_timer">Ohne Timer spielen</option>
+         <select name="timer" class="form-control" id="timer">
+           <option value="30"
+           <?php if(isset($t) && $t == 30){
+             echo 'selected';
+           }?>>30s</option>
+
+           <option value="45"
+           <?php if(isset($t) && $t == 45){
+             echo 'selected';
+           }?>>45s</option>
+
+           <option value="60"
+           <?php if(isset($t) && $t == 60){
+             echo 'selected';
+           }?>>60s</option>
+
+           <option value="0"
+           <?php if(isset($t) && $t == 0){
+             echo 'selected';
+           }?>>Ohne Timer spielen</option>
          </select>
        </div>
 
 
       <!-- Kategorien -->
       <h3>Kategorien</h3>
-      <p>Wähle die Kategorien an, aus welchen die Wörter selektiert werden.</p>
+      <p>Wähle die Kategorien, aus welchen die Wörter selektiert werden.</p>
 
+      <!-- Checkboxen Kategorien -->
       <?php foreach ($kategorien as $kategorie) { ?>
 
-        <!-- Checkboxen Kategorien -->
         <div class="form-check form-check-inline">
-          <input name="kategorien" class="form-check-input" type="checkbox" id="<?php echo $kategorie['kategorie_name']; ?>" value="option1" checked>
+          <input name="kategorien[]" class="form-check-input" type="checkbox" id="<?php echo $kategorie['kategorie_name']; ?>"
+          value = "<?php echo $kategorie['kategorie_name']; ?> " checked='checked'>
+
           <label class="form-check-label" for="<?php echo $kategorie['kategorie_name']; ?>"><?php echo $kategorie['kategorie_name']; ?></label>
         </div>
 
       <?php } ?>
 
-      <!-- Test -->
-      </br></br></br></br>
-      <div class="form-check">
-        <input name="test" class="form-check-input" type="checkbox" value="1" id="test"
-        <?php if(isset($test)){
-          if($test == 1){
-            echo "checked='checked'";
-          }
-        } ?>>
-        <label class="form-check-label" for="test">
-          Test
-        </label>
-      </div>
 
       <!-- Kategorie Message -->
       <?php if(!empty($msg_kategorie)){ ?>
@@ -134,9 +188,10 @@ if(isset($_POST['go'])){
       </a>
 
     </form>
+
   </div>
 
-<!-- <?php include_once('../templates/footer.php'); ?> -->
+  <?php include_once('../templates/footer.php'); ?>
 
 </body>
 </html>

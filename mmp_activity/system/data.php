@@ -28,6 +28,13 @@ function selektiere_alle_kategorien(){
 	return $result->fetchAll();
 }
 
+function selektiere_begriffe_beschreibung_anhand_kategorie($kategorie){
+	$db = get_db_connection();
+	$sql = 	"SELECT * FROM begriff_kategorie WHERE kategorie_name = '$kategorie';";
+	$result = $db->query($sql);
+	return $result->fetchAll();
+}
+
 // function selektiere_alle_rezepte(){
 // 	$db = get_db_connection();
 // 	$sql = 	"SELECT * FROM rezepte;";

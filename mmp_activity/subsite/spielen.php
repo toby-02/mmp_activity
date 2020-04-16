@@ -4,6 +4,20 @@ session_start();
 require_once('../system/config.php');
 require_once('../system/data.php');
 
+if(isset($_SESSION['einstellungen'])){
+  $einstellungen = $_SESSION['einstellungen'];
+  $t = $einstellungen['0'];
+  $modus = $einstellungen['1'];
+  $kategorien = $einstellungen['2'];
+}
+$begriffe_kategorie=[];
+foreach($kategorien as $kategorie){
+    $kategorie=selektiere_begriffe_beschreibung_anhand_kategorie($kategorie);
+      foreach($kategorie as $array){
+        array_push($begriffe_kategorie, $array);
+      }
+  }
+print_r($begriffe_kategorie);
 ?>
 
 <!-- VIEW -->
