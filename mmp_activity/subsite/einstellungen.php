@@ -4,6 +4,26 @@ session_start();
 require_once('../system/config.php');
 require_once('../system/data.php');
 
+$kategorien= selektiere_alle_kategorien();
+
+// überprüfen, ob der Button Go geklickt wurde
+if(isset($_POST['go'])){
+  $go_valid = true;
+  $msg_modus = "";
+  $msg_kategorie = "";
+
+  // if(!isset($_POST['test'])){
+  //   $msg_kategorie = "Bitte wähle eine Kategorie an";
+  // }
+  $test = $_POST['test'];
+  if ($test == 1) {
+  $test = 1;
+  } else {
+  $test = 0;
+  $msg_kategorie = "Bitte wähle eine Kategorie an";
+  }
+
+}
 ?>
 
 <!-- VIEW -->
@@ -24,7 +44,9 @@ require_once('../system/data.php');
   <div class="container">
     <?php include_once('../templates/menu.php'); ?>
 
-      <h1>Vor-Einstellungen</h1></br>
+    <h1>Vor-Einstellungen</h1></br>
+    <!-- Formular -->
+    <form action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post">
 
       <!-- Spielart -->
       <h3>Spielmodus</h3>
@@ -33,7 +55,7 @@ require_once('../system/data.php');
 
         <!-- Checkbox Erklären -->
         <div class="form-check">
-          <input class="form-check-input" type="checkbox" value="" id="erklaeren" checked>
+          <input name="erklaeren" class="form-check-input" type="checkbox" value="" id="erklaeren" checked>
           <label class="form-check-label" for="erklaeren">
             Erklären
           </label>
@@ -41,7 +63,7 @@ require_once('../system/data.php');
 
         <!-- Checkbox Pantomime -->
         <div class="form-check">
-          <input class="form-check-input" type="checkbox" value="" id="pantomime" checked>
+          <input name="pantomime" class="form-check-input" type="checkbox" value="" id="pantomime" checked>
           <label class="form-check-label" for="pantomime">
             Pantomime
           </label>
@@ -49,7 +71,7 @@ require_once('../system/data.php');
 
         <!-- Checkbox Zeichnen -->
         <div class="form-check">
-          <input class="form-check-input" type="checkbox" value="" id="zeichnen" checked>
+          <input name="zeichnen" class="form-check-input" type="checkbox" value="" id="zeichnen" checked>
           <label class="form-check-label" for="zeichnen">
             Zeichnen
           </label>
@@ -59,95 +81,62 @@ require_once('../system/data.php');
       <h3>Timer</h3>
       <p>Setze einen Timer. Du kannst auch ohne Zeitlimit spielen.</p>
 
-          <!-- Dropout Timer -->
-          <div class="form-group">
-           <select class="form-control" id="timer">
-             <option>30s</option>
-             <option>45s</option>
-             <option>60s</option>
-             <option>Ohne Timer spielen</option>
-           </select>
-         </div>
+        <!-- Dropout Timer -->
+        <div class="form-group">
+         <select class="form-control" id="timer">
+           <option name="30s">30s</option>
+           <option name="45s">45s</option>
+           <option name="60s">60s</option>
+           <option name="no_timer">Ohne Timer spielen</option>
+         </select>
+       </div>
 
 
-        <!-- Kategorien -->
-        <h3>Kategorien</h3>
-        <p>Wähle die Kategorien an, aus welchen die Wörter selektiert werden.</p>
+      <!-- Kategorien -->
+      <h3>Kategorien</h3>
+      <p>Wähle die Kategorien an, aus welchen die Wörter selektiert werden.</p>
 
-          <!-- Checkbox IM -->
-          <div class="form-check form-check-inline">
-            <input class="form-check-input" type="checkbox" id="interaktive_medien" value="option1" checked>
-            <label class="form-check-label" for="interaktive_medien">Interaktive Medien</label>
-          </div>
+      <?php foreach ($kategorien as $kategorie) { ?>
 
-          <!-- Checkbox Visualisieren -->
-          <div class="form-check form-check-inline">
-            <input class="form-check-input" type="checkbox" id="visualisieren" value="option2" checked>
-            <label class="form-check-label" for="visualisieren">Visualisieren</label>
-          </div>
+        <!-- Checkboxen Kategorien -->
+        <div class="form-check form-check-inline">
+          <input name="kategorien" class="form-check-input" type="checkbox" id="<?php echo $kategorie['kategorie_name']; ?>" value="option1" checked>
+          <label class="form-check-label" for="<?php echo $kategorie['kategorie_name']; ?>"><?php echo $kategorie['kategorie_name']; ?></label>
+        </div>
 
-          <!-- Checkbox Schreiben & Sprechen -->
-          <div class="form-check form-check-inline">
-            <input class="form-check-input" type="checkbox" id="schreiben_sprechen" value="option3" checked>
-            <label class="form-check-label" for="schreiben_sprechen">Schreiben & Sprechen</label>
-          </div>
+      <?php } ?>
 
-          <!-- Checkbox Konvergent Arbeiten -->
-          <div class="form-check form-check-inline">
-            <input class="form-check-input" type="checkbox" id="konvergent_arbeiten" value="option4" checked>
-            <label class="form-check-label" for="konvergent_arbeiten">Konvergent Arbeiten</label>
-          </div>
+      <!-- Test -->
+      </br></br></br></br>
+      <div class="form-check">
+        <input name="test" class="form-check-input" type="checkbox" value="1" id="test"
+        <?php if(isset($test)){
+          if($test == 1){
+            echo "checked='checked'";
+          }
+        } ?>>
+        <label class="form-check-label" for="test">
+          Test
+        </label>
+      </div>
 
-          <!-- Checkbox AKT -->
-          <div class="form-check form-check-inline">
-            <input class="form-check-input" type="checkbox" id="akt" value="option5" checked>
-            <label class="form-check-label" for="akt">Audio- & Kameratechnik</label>
-          </div>
+      <!-- Kategorie Message -->
+      <?php if(!empty($msg_kategorie)){ ?>
+            <div class="alert alert-info msg" role="alert">
+              <p><?php echo $msg_kategorie ?></p>
+            </div>
+      <?php } ?>
 
-          <!-- Checkbox Filmisches Gestalten -->
-          <div class="form-check form-check-inline">
-            <input class="form-check-input" type="checkbox" id="filmisches_gestalten" value="option6" checked>
-            <label class="form-check-label" for="filmisches_gestalten">Filmisches Gestalten</label>
-          </div>
+      <!-- Button Go -->
+      </br>
+      <a class="float-right">
+        <button name="go" type="submit" class="btn btn-primary btn-lg">Go!</button>
+      </a>
 
-          <!-- Checkbox Corporate Communications -->
-          <div class="form-check form-check-inline">
-            <input class="form-check-input" type="checkbox" id="cc" value="option7" checked>
-            <label class="form-check-label" for="cc">Corporate Communications</label>
-          </div>
-
-          <!-- Checkbox Markt- & Medienforschung -->
-          <div class="form-check form-check-inline">
-            <input class="form-check-input" type="checkbox" id="mamef" value="option8" checked>
-            <label class="form-check-label" for="mamef">Markt- & Medienforschung</label>
-          </div>
-
-          <!-- Checkbox Medien BWL -->
-          <div class="form-check form-check-inline">
-            <input class="form-check-input" type="checkbox" id="medien_bwl" value="option9" checked>
-            <label class="form-check-label" for="medien_bwl">Medien BWL</label>
-          </div>
-
-          <!-- Checkbox Medienethik -->
-          <div class="form-check form-check-inline">
-            <input class="form-check-input" type="checkbox" id="medienethik" value="option10" checked>
-            <label class="form-check-label" for="medienethik">Medienethik</label>
-          </div>
-
-          <!-- Checkbox Medienrecht -->
-          <div class="form-check form-check-inline">
-            <input class="form-check-input" type="checkbox" id="medienrecht" value="option11" checked>
-            <label class="form-check-label" for="medienrecht">Medienrecht</label>
-          </div>
-
-          <!-- Button Go -->
-          </br>
-          <a class="float-right" href="<?php echo $base_url; ?>subsite/spielen.php">
-            <button type="button" class="btn btn-primary btn-lg">Go!</button>
-          </a>
+    </form>
   </div>
 
-<?php include_once('../templates/footer.php'); ?>
+<!-- <?php include_once('../templates/footer.php'); ?> -->
 
 </body>
 </html>

@@ -20,6 +20,13 @@ function get_db_connection(){
 
 // ********************************************************
 
+// Alle Kategorien aus der Datenbank ziehen
+function selektiere_alle_kategorien(){
+	$db = get_db_connection();
+	$sql = 	"SELECT * FROM kategorien;";
+	$result = $db->query($sql);
+	return $result->fetchAll();
+}
 
 // function selektiere_alle_rezepte(){
 // 	$db = get_db_connection();
