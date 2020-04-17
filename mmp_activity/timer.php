@@ -28,35 +28,43 @@ require_once('system/data.php');
     <h1>Timer</h1>
     <span id="countdowntimer"></span>
 
-    <button type="button" id="new" class="btn btn-primary">Timer neu starten</button>
+    <button style="visibility: hidden" type="button" id="new" class="btn btn-primary">Timer neu starten</button>
   </div>
 
 <?php include_once('templates/footer.php'); ?>
 
 <script type="text/javascript">
-  var t = 5;
-  var timeleft = t;
-  var downloadTimer = setInterval(function(){
-    timeleft--;
-    document.getElementById("countdowntimer").textContent = timeleft;
-    if(timeleft <= 0)
-        clearInterval(downloadTimer);
-  },1000);
+  var timeLeft = 5;
+      var elem = document.getElementById('countdowntimer');
+      var timerId = setInterval(countdown, 1000);
+
+      function countdown() {
+        if (timeLeft <= -1) {
+          clearTimeout(timerId);
+          document.getElementById("new").style.visibility = "visible";
+        } else {
+          elem.innerHTML = timeLeft;
+          timeLeft--;
+        }
+      }
 
 
 
   document.querySelector("#new").addEventListener("click", function(){
-    // console.log("test");
-    if(timeleft == 0){
-      // console.log("da passiert was");
-      // var timeleft = t;
-      var downloadTimer = setInterval(function(){
-        timeleft--;
-        document.getElementById("countdowntimer").textContent = timeleft;
-        if(timeleft <= 0)
-            clearInterval(downloadTimer);
-      },1000);
-    }
+    document.getElementById("new").style.visibility = "hidden";
+    var timeLeft = 5;
+        var elem = document.getElementById('countdowntimer');
+        var timerId = setInterval(countdown, 1000);
+
+        function countdown() {
+          if (timeLeft <= -1) {
+            clearTimeout(timerId);
+            document.getElementById("new").style.visibility = "visible";
+          } else {
+            elem.innerHTML = timeLeft;
+            timeLeft--;
+          }
+        }
 
   });
 
