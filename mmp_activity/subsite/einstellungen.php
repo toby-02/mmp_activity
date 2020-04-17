@@ -161,17 +161,25 @@ if(isset($_POST['go'])){
       <h3>Kategorien</h3>
       <p>Wähle die Kategorien, aus welchen die Wörter selektiert werden.</p>
 
+      <!-- Slider Alles anwählen -->
+      <div class="form-check form-check-inline">
+        <input class="form-check-input" type="checkbox" id="inlineCheckbox1" value="option1">
+        <label class="form-check-label" for="inlineCheckbox1">Alles anwählen</label>
+      </div>
+
       <!-- Checkboxen Kategorien -->
       <?php foreach ($kategorien as $kategorie) { ?>
 
         <div class="form-check form-check-inline">
           <input name="kategorien[]" class="form-check-input" type="checkbox" id="<?php echo $kategorie['kategorie_name']; ?>"
-          value = "<?php echo $kategorie['kategorie_name']; ?> " checked='checked'>
+          value = "<?php echo $kategorie['kategorie_name']; ?>"
+          <?php if(isset($kategorie_check)){
+            if(in_array($kategorie['kategorie_name'], $kategorie_check)){echo 'checked';}
+          }?> >
           <label class="form-check-label" for="<?php echo $kategorie['kategorie_name']; ?>"><?php echo $kategorie['kategorie_name']; ?></label>
         </div>
 
       <?php } ?>
-
 
       <!-- Kategorie Message -->
       <?php if(!empty($msg_kategorie)){ ?>

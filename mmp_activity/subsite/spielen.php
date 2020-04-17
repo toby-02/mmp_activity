@@ -46,8 +46,8 @@ shuffle($alle_begriffe_beschreibungen_kategorien);
       <span id="angezeigte_kategorie" class="badge badge-pill badge-dark"></span></br></br>
 
       <!-- Timer -->
-      <h4>0:30s</h4></br>
-
+      <h4><span id="countdowntimer"></span></h4>
+      <p>Sekunden</p>
       <!-- Button Erklärung anzeigen -->
       <button type="button" id="show" class="btn btn-primary">Erklärung anzeigen</button>
 
@@ -70,6 +70,15 @@ shuffle($alle_begriffe_beschreibungen_kategorien);
 <?php include_once('../templates/footer.php'); ?>
 
 <script>
+    //timer
+    var timeleft = 31;
+    var downloadTimer = setInterval(function(){
+      timeleft--;
+      document.getElementById("countdowntimer").textContent = timeleft;
+      if(timeleft <= 0)
+          clearInterval(downloadTimer);
+    },1000);
+
     //Array mit dem Spielmodus aus PHP in JS nehmen und ersten Wert ausgeben
     var modus =<?php echo json_encode($modus );?>;
     var art = modus['0'];
