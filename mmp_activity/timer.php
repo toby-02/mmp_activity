@@ -14,8 +14,13 @@ require_once('system/data.php');
   <title>MMP Activity</title>
 
   <!-- Bootstrap & CSS Verlinkung -->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+  <script src="https://unpkg.com/@popperjs/core@2/dist/umd/popper.js"></script>
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+
   <link href="styles.css" rel="stylesheet" type="text/css">
+
 
 </head>
 <body>
@@ -25,49 +30,20 @@ require_once('system/data.php');
   <div class="container">
     <?php include_once('templates/menu.php'); ?>
 
-    <h1>Timer</h1>
-    <span id="countdowntimer"></span>
+    <div class="container">
+      <h3>Popover Example</h3>
+      <a href="#" data-toggle="popover" title="Popover Header" data-content="Some content inside the popover">Toggle popover</a>
+    </div>
 
-    <button style="visibility: hidden" type="button" id="new" class="btn btn-primary">Timer neu starten</button>
+
   </div>
 
 <?php include_once('templates/footer.php'); ?>
 
 <script type="text/javascript">
-  var timeLeft = 5;
-      var elem = document.getElementById('countdowntimer');
-      var timerId = setInterval(countdown, 1000);
-
-      function countdown() {
-        if (timeLeft <= -1) {
-          clearTimeout(timerId);
-          document.getElementById("new").style.visibility = "visible";
-        } else {
-          elem.innerHTML = timeLeft;
-          timeLeft--;
-        }
-      }
-
-
-
-  document.querySelector("#new").addEventListener("click", function(){
-    document.getElementById("new").style.visibility = "hidden";
-    var timeLeft = 5;
-        var elem = document.getElementById('countdowntimer');
-        var timerId = setInterval(countdown, 1000);
-
-        function countdown() {
-          if (timeLeft <= -1) {
-            clearTimeout(timerId);
-            document.getElementById("new").style.visibility = "visible";
-          } else {
-            elem.innerHTML = timeLeft;
-            timeLeft--;
-          }
-        }
-
+  $(document).ready(function(){
+      $('[data-toggle="popover"]').popover();
   });
-
 </script>
 
 </body>

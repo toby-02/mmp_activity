@@ -6,7 +6,7 @@ h1 {
   display: flex;
   justify-content: center;
   align-items: center;
-  margin-top: 25vh;
+  margin-top: 20vh;
 }
 
 .mitte {
@@ -18,4 +18,13 @@ h1 {
   margin-left: 25vw;
   background-color: WhiteSmoke;
   visibility: hidden;
+  height: 100px;
+}
+
+#startbutton {
+  font-size: 50px;
+}
+
+.beenden{
+  float: right;
 }

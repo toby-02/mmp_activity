@@ -4,6 +4,10 @@ session_start();
 require_once('../system/config.php');
 require_once('../system/data.php');
 
+if(isset($_POST['beenden'])){
+
+}
+
 if(isset($_SESSION['einstellungen'])){
   $einstellungen = $_SESSION['einstellungen'];
   $t = $einstellungen['0'];
@@ -43,14 +47,14 @@ shuffle($alle_begriffe_beschreibungen_kategorien);
       <h1 id= "angezeigter_begriff" class= angezeigter_begriff></h1></br>
 
       <!-- Kategorie -->
-      <span id="angezeigte_kategorie" class="badge badge-pill badge-dark"></span></br></br>
+      <span id="angezeigte_kategorie" class="badge badge-pill badge-dark">#</span></br></br></br>
 
       <!-- Timer -->
       <h4><span id="countdowntimer"></span></h4>
       <p id="sekunden">Sekunden</p>
 
       <!-- Button neue Runde -->
-      <button style="visibility: hidden" type="button" id="new" class="btn btn-warning">Neue Runde</button></br></br>
+      <button style="visibility: hidden" type="button" id="new" class="btn btn-warning">Neue Runde</button></br>
 
       <!-- Button Erklärung anzeigen -->
       <button type="button" id="show" class="btn btn-primary">Erklärung anzeigen</button>
@@ -61,17 +65,16 @@ shuffle($alle_begriffe_beschreibungen_kategorien);
       <!-- Beschreibung -->
       <p id="angezeigte_beschreibung" visible="false"> </p>
 
-
-      <!-- Button Spiel beenden -->
-      <a href="<?php echo $base_url; ?>">
-        <button type="button" class="btn btn-danger">Spiel beenden</button>
-      </a>
     </div>
   </div>
+  <!-- Button Spiel beenden -->
+<form action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post">
+  <a href="<?php echo $base_url; ?>">
+    <button type="button" class="beenden btn btn-danger">Spiel beenden</button>
+  </a>
+</form>
 
-
-
-<?php include_once('../templates/footer.php'); ?>
+<!-- <?php include_once('../templates/footer.php'); ?> -->
 
 <script>
   //Array mit dem Spielmodus aus PHP in JS nehmen und ersten Wert ausgeben
@@ -89,7 +92,7 @@ shuffle($alle_begriffe_beschreibungen_kategorien);
 
   // Erste Kategorie ausgeben
   var kategorie= angezeigt['kategorie_name'];
-  document.getElementById("angezeigte_kategorie").innerHTML = kategorie;
+  document.getElementById("angezeigte_kategorie").innerHTML = "#" + kategorie;
 
   // Erste Beschreibung ausgeben
   var beschreibung = angezeigt['beschreibung'];
@@ -124,12 +127,12 @@ shuffle($alle_begriffe_beschreibungen_kategorien);
 
       //Neue Kategorie anzeigen
       var kategorie= angezeigt['kategorie_name'];
-      document.getElementById("angezeigte_kategorie").innerHTML = kategorie;
+      document.getElementById("angezeigte_kategorie").innerHTML = "#" + kategorie;
 
       //Neue zufällige Spielart auswählen
-      var mod_count = Math.floor(Math.random() * modus.length);
-      var art = modus[mod_count];
-      document.getElementById("modus").innerHTML = art;
+      // var mod_count = Math.floor(Math.random() * modus.length);
+      // var art = modus[mod_count];
+      // document.getElementById("modus").innerHTML = art;
     }
     });
 
@@ -138,70 +141,14 @@ shuffle($alle_begriffe_beschreibungen_kategorien);
     document.getElementById("angezeigte_beschreibung").style.visibility = "visible";
   });
 
+
+
   //Eingegeben Zeit aus PHP in JS laden
   var t =<?php echo json_encode($t );?>;
 
-  //Timer, sobald auf 0, dann blendet es Erklärung und Nächster Begriff-Button aus
-  //und den Button neue Runde ein
-  var timeLeft = t;
-      var elem = document.getElementById('countdowntimer');
-      var timerId = setInterval(countdown, 1000);
-
-      function countdown() {
-        if (timeLeft <= -1) {
-          clearTimeout(timerId);
-          document.getElementById("new").style.visibility = "visible";
-          document.getElementById("next").style.visibility = "hidden";
-          document.getElementById("show").style.visibility = "hidden";
-        } else {
-          elem.innerHTML = timeLeft;
-          timeLeft--;
-        }
-      }
-
-  //Sobald auf neue Runde geklickt, verschwindet Button und die anderen werden wieder angezeigt
-  //Neuer Begriff wird geladen und Countdown startet neu
-  document.querySelector("#new").addEventListener("click", function(){
-    //Buttons aus und einblenden
-    document.getElementById("new").style.visibility = "hidden";
-    document.getElementById("next").style.visibility = "visible";
-    document.getElementById("show").style.visibility = "visible";
-
-    //Neuer Begriff anzeigen
-    //Zuerst überprüfen, ob noch etwas im array drin ist
-    //wenn nicht, dann blendet es alles aus und es gibt eine Benachrichtigung
-    counter = counter + 1;
-    if(counter >= alles.length){
-      document.getElementById("angezeigter_begriff").innerHTML = "Du hast alle Begriffe der gewählten Kategorien durchgespielt";
-      document.getElementById("angezeigte_beschreibung").style.visibility = "hidden";
-      document.getElementById("next").style.visibility = "hidden";
-      document.getElementById("show").style.visibility = "hidden";
-      document.getElementById("modus").style.visibility = "hidden";
-      document.getElementById("angezeigte_kategorie").style.visibility = "hidden";
-      document.getElementById("countdowntimer").style.visibility = "hidden";
-      document.getElementById("sekunden").style.visibility = "hidden";
-    }else{
-      //Wenn es noch Begriffe hat, dann wird der nächste Begriff angezeigt
-      var angezeigt = alles[counter];
-      var begriff= angezeigt['begriff'];
-      document.getElementById("angezeigter_begriff").innerHTML = begriff;
-
-      //Neue Beschreibung anzeigen & Beschreibung wieder verstecken
-      var beschreibung = angezeigt['beschreibung'];
-      document.getElementById("angezeigte_beschreibung").innerHTML = beschreibung;
-      document.getElementById("angezeigte_beschreibung").style.visibility = "hidden";
-
-      //Neue Kategorie anzeigen
-      var kategorie= angezeigt['kategorie_name'];
-      document.getElementById("angezeigte_kategorie").innerHTML = kategorie;
-
-      //Neue zufällige Spielart auswählen
-      var mod_count = Math.floor(Math.random() * modus.length);
-      var art = modus[mod_count];
-      document.getElementById("modus").innerHTML = art;
-    }
-
-    //Timer neu starten
+  if(t>0){
+    //Timer, sobald auf 0, dann blendet es Erklärung und Nächster Begriff-Button aus
+    //und den Button neue Runde ein
     var timeLeft = t;
         var elem = document.getElementById('countdowntimer');
         var timerId = setInterval(countdown, 1000);
@@ -212,13 +159,75 @@ shuffle($alle_begriffe_beschreibungen_kategorien);
             document.getElementById("new").style.visibility = "visible";
             document.getElementById("next").style.visibility = "hidden";
             document.getElementById("show").style.visibility = "hidden";
+            document.getElementById("angezeigte_beschreibung").style.visibility = "hidden";
           } else {
             elem.innerHTML = timeLeft;
             timeLeft--;
           }
         }
-  });
 
+    //Sobald auf neue Runde geklickt, verschwindet Button und die anderen werden wieder angezeigt
+    //Neuer Begriff wird geladen und Countdown startet neu
+    document.querySelector("#new").addEventListener("click", function(){
+      //Buttons aus und einblenden
+      document.getElementById("new").style.visibility = "hidden";
+      document.getElementById("next").style.visibility = "visible";
+      document.getElementById("show").style.visibility = "visible";
+
+      //Neuer Begriff anzeigen
+      //Zuerst überprüfen, ob noch etwas im array drin ist
+      //wenn nicht, dann blendet es alles aus und es gibt eine Benachrichtigung
+      counter = counter + 1;
+      if(counter >= alles.length){
+        document.getElementById("angezeigter_begriff").innerHTML = "Du hast alle Begriffe der gewählten Kategorien durchgespielt";
+        document.getElementById("angezeigte_beschreibung").style.visibility = "hidden";
+        document.getElementById("next").style.visibility = "hidden";
+        document.getElementById("show").style.visibility = "hidden";
+        document.getElementById("modus").style.visibility = "hidden";
+        document.getElementById("angezeigte_kategorie").style.visibility = "hidden";
+        document.getElementById("countdowntimer").style.visibility = "hidden";
+        document.getElementById("sekunden").style.visibility = "hidden";
+      }else{
+        //Wenn es noch Begriffe hat, dann wird der nächste Begriff angezeigt
+        var angezeigt = alles[counter];
+        var begriff= angezeigt['begriff'];
+        document.getElementById("angezeigter_begriff").innerHTML = begriff;
+
+        //Neue Beschreibung anzeigen & Beschreibung wieder verstecken
+        var beschreibung = angezeigt['beschreibung'];
+        document.getElementById("angezeigte_beschreibung").innerHTML = beschreibung;
+        document.getElementById("angezeigte_beschreibung").style.visibility = "hidden";
+
+        //Neue Kategorie anzeigen
+        var kategorie= angezeigt['kategorie_name'];
+        document.getElementById("angezeigte_kategorie").innerHTML = "#" + kategorie;
+
+        //Neue zufällige Spielart auswählen
+        var mod_count = Math.floor(Math.random() * modus.length);
+        var art = modus[mod_count];
+        document.getElementById("modus").innerHTML = art;
+      }
+
+      //Timer neu starten
+      var timeLeft = t;
+          var elem = document.getElementById('countdowntimer');
+          var timerId = setInterval(countdown, 1000);
+
+          function countdown() {
+            if (timeLeft <= -1) {
+              clearTimeout(timerId);
+              document.getElementById("new").style.visibility = "visible";
+              document.getElementById("next").style.visibility = "hidden";
+              document.getElementById("show").style.visibility = "hidden";
+            } else {
+              elem.innerHTML = timeLeft;
+              timeLeft--;
+            }
+          }
+    });
+  }else {
+    document.getElementById("sekunden").style.visibility = "hidden";
+  }
 </script>
 </body>
 

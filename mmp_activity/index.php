@@ -4,6 +4,10 @@ session_start();
 require_once('system/config.php');
 require_once('system/data.php');
 
+if(isset($_SESSION['einstellungen'])) {
+  unset($_SESSION['einstellungen']);
+  session_destroy();
+}
 ?>
 
 <!-- VIEW -->
@@ -26,7 +30,7 @@ require_once('system/data.php');
 
     <h1>Herzlich Willkommen beim MMP Activity!</h1>
       <a class="box_mitte" href="<?php echo $base_url; ?>subsite/einstellungen.php">
-        <button type="button" class="btn btn-primary btn-lg">Spielen</button>
+        <button id="startbutton" type="button" class="btn btn-primary btn-lg">Spielen</button>
       </a>
 
   </div>

@@ -91,7 +91,7 @@ if(isset($_POST['go'])){
       <!-- Spielart -->
       <h3>Spielmodus</h3>
       <p>Wähle aus, wie du spielen möchtest. Du kannst einen Spielmodus oder mehrere auswählen.</br>
-        Die gewählten Spielarten werden den Wörtern zufällig zugeordnet.</p>
+        Die gewählten Spielarten werden den Spielrunden zufällig zugeordnet.</p>
 
         <!-- Checkbox Erklären -->
         <div class="form-check">
@@ -162,16 +162,16 @@ if(isset($_POST['go'])){
       <p>Wähle die Kategorien, aus welchen die Wörter selektiert werden.</p>
 
       <!-- Slider Alles anwählen -->
-      <div class="form-check form-check-inline">
-        <input class="form-check-input" type="checkbox" id="inlineCheckbox1" value="option1">
-        <label class="form-check-label" for="inlineCheckbox1">Alles anwählen</label>
+      <div class="custom-control custom-switch">
+        <input type="checkbox" class="custom-control-input" id="switch">
+        <label class="custom-control-label" for="switch">Alle Kategorien anwählen</label>
       </div>
 
       <!-- Checkboxen Kategorien -->
       <?php foreach ($kategorien as $kategorie) { ?>
 
-        <div class="form-check form-check-inline">
-          <input name="kategorien[]" class="form-check-input" type="checkbox" id="<?php echo $kategorie['kategorie_name']; ?>"
+        <div id="kategorie_container" class="form-check form-check-inline">
+          <input name="kategorien[]" class="form-check-input kategorie" type="checkbox" id="<?php echo $kategorie['kategorie_name']; ?>"
           value = "<?php echo $kategorie['kategorie_name']; ?>"
           <?php if(isset($kategorie_check)){
             if(in_array($kategorie['kategorie_name'], $kategorie_check)){echo 'checked';}
@@ -198,7 +198,42 @@ if(isset($_POST['go'])){
 
   </div>
 
-  <?php include_once('../templates/footer.php'); ?>
+  <!-- <?php include_once('../templates/footer.php'); ?> -->
+<script>
+  var schalter = 0;
+  document.querySelector("#switch").addEventListener("click", function(){
+    schalter = schalter + 1;
+    console.log(schalter);
+    if(schalter % 2 == 0){
+      console.log("gerade");
+      document.getElementById("Audio- & Kameratechnik").removeAttribute("checked", "checked");
+      document.getElementById("Corporate Communictions").removeAttribute("checked", "checked");
+      document.getElementById("Filmisches Gestalten").removeAttribute("checked", "checked");
+      document.getElementById("Interaktive Medien").removeAttribute("checked", "checked");
+      document.getElementById("Konvergent Arbeiten").removeAttribute("checked", "checked");
+      document.getElementById("Markt- & Medienforschung").removeAttribute("checked", "checked");
+      document.getElementById("Medien BWL").removeAttribute("checked", "checked");
+      document.getElementById("Medienethik").removeAttribute("checked", "checked");
+      document.getElementById("Medienrecht").removeAttribute("checked", "checked");
+      document.getElementById("Schreiben & Sprechen").removeAttribute("checked", "checked");
+      document.getElementById("Visualisieren").removeAttribute("checked", "checked");
+    }else{
+      document.getElementById("Audio- & Kameratechnik").setAttribute("checked", "checked");
+      document.getElementById("Corporate Communictions").setAttribute("checked", "checked");
+      document.getElementById("Filmisches Gestalten").setAttribute("checked", "checked");
+      document.getElementById("Interaktive Medien").setAttribute("checked", "checked");
+      document.getElementById("Konvergent Arbeiten").setAttribute("checked", "checked");
+      document.getElementById("Markt- & Medienforschung").setAttribute("checked", "checked");
+      document.getElementById("Medien BWL").setAttribute("checked", "checked");
+      document.getElementById("Medienethik").setAttribute("checked", "checked");
+      document.getElementById("Medienrecht").setAttribute("checked", "checked");
+      document.getElementById("Schreiben & Sprechen").setAttribute("checked", "checked");
+      document.getElementById("Visualisieren").setAttribute("checked", "checked");
+    }
 
+
+  });
+
+</script>
 </body>
 </html>
